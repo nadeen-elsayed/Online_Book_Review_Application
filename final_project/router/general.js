@@ -59,8 +59,13 @@ public_users.get('/title/:title',function (req, res) {
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
-});
+    //Write your code here
+    let isbn = req.params.isbn;
+    let filtered_books = books[isbn]
+    res.send(`Book ISBN:${isbn} 
+    Book review: ${JSON.stringify(filtered_books['reviews'],null,4)}`)
+    //return res.status(300).json({message: "Yet to be implemented"});
+  });
+  
 
 module.exports.general = public_users;
