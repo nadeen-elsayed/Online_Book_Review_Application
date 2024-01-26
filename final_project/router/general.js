@@ -44,9 +44,18 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
-});
+    //Write your code here
+    let title = req.params.title;
+    let filtered_books;
+    for (const [key] of Object.entries(books)) {
+      if(books[key]['title'] == title){
+          filtered_books = books[key]
+      }
+    }
+    res.send(JSON.stringify(filtered_books,null,4)) 
+    //return res.status(300).json({message: "Yet to be implemented"});
+  });
+  
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
