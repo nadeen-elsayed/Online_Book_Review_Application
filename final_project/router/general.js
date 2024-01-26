@@ -30,9 +30,17 @@ public_users.get('/isbn/:isbn',function (req, res) {
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
-});
+    //Write your code here
+    let author = req.params.author;
+    let filtered_books;
+    for (const [key] of Object.entries(books)) {
+      if(books[key]['author'] == author){
+          filtered_books = books[key]
+      }
+    }
+    res.send(JSON.stringify(filtered_books,null,4)) 
+    //return res.status(300).json({message: "Yet to be implemented"});
+  });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
