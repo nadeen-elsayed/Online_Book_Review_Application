@@ -34,11 +34,30 @@ public_users.post("/register", (req,res) => {
   //return res.status(300).json({message: "Yet to be implemented"});
 });
 
-// Get the book list available in the shop
-public_users.get('/',function (req, res) {
-    //Write your code here
-    res.send(JSON.stringify(books, null,4))
+// Get the book list available in the shop using Promise callbacks
+public_users.get('/', function (req, res) {
+    // Create a Promise to fetch the list of books
+    const getBooksPromise = new Promise((resolve, reject) => {
+
+    if (books) {
+        resolve(books);
+    } else {
+        reject(new Error('No books available.'));
+    }
+    });
+  
+    // Handle the Promise using callbacks
+    getBooksPromise
+      .then((bookList) => {
+        // Send the book list as a JSON response
+        res.send(JSON.stringify(bookList, null, 4));
+      })
+      .catch((error) => {
+        // Handle the error if the Promise is rejected
+        res.status(500).send(JSON.stringify({ error: error.message }, null, 4));
+      });
   });
+  
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
