@@ -90,18 +90,32 @@ public_users.get('/isbn/:isbn', function (req, res) {
   });
     
   
-// Get book details based on author
-public_users.get('/author/:author',function (req, res) {
-    //Write your code here
+// Get book details based on author using Promise callbacks
+public_users.get('/author/:author', function (req, res) {
     let author = req.params.author;
-    let filtered_books;
-    for (const [key] of Object.entries(books)) {
-      if(books[key]['author'] == author){
-          filtered_books = books[key]
-      }
-    }
-    res.send(JSON.stringify(filtered_books,null,4)) 
-    //return res.status(300).json({message: "Yet to be implemented"});
+  
+    // Create a Promise to fetch book details based on author
+    const getBookDetailsByAuthorPromise = new Promise((resolve, reject) => {
+      
+        let filteredBooks = Object.values(books).filter((book) => book.author === author);
+  
+        if (filteredBooks.length > 0) {
+          resolve(filteredBooks);
+        } else {
+          reject(new Error(`No books found for the author: ${author}`));
+        }
+    });
+  
+    // Handle the Promise using callbacks
+    getBookDetailsByAuthorPromise
+      .then((filteredBooks) => {
+        // Send the book details as a JSON response
+        res.send(JSON.stringify(filteredBooks, null, 4));
+      })
+      .catch((error) => {
+        // Handle the error if the Promise is rejected
+        res.status(404).json({ message: error.message });
+      });
   });
 
 // Get all books based on title
