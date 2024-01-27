@@ -118,18 +118,32 @@ public_users.get('/author/:author', function (req, res) {
       });
   });
 
-// Get all books based on title
-public_users.get('/title/:title',function (req, res) {
-    //Write your code here
+// Get book details based on title using Promise callbacks
+public_users.get('/title/:title', function (req, res) {
     let title = req.params.title;
-    let filtered_books;
-    for (const [key] of Object.entries(books)) {
-      if(books[key]['title'] == title){
-          filtered_books = books[key]
-      }
-    }
-    res.send(JSON.stringify(filtered_books,null,4)) 
-    //return res.status(300).json({message: "Yet to be implemented"});
+  
+    // Create a Promise to fetch book details based on title
+    const getBookDetailsByTitlePromise = new Promise((resolve, reject) => {
+      
+        let filteredBooks = Object.values(books).filter((book) => book.title === title);
+  
+        if (filteredBooks.length > 0) {
+          resolve(filteredBooks);
+        } else {
+          reject(new Error(`No books found for the title: ${title}`));
+        }
+    });
+  
+    // Handle the Promise using callbacks
+    getBookDetailsByTitlePromise
+      .then((filteredBooks) => {
+        // Send the book details as a JSON response
+        res.send(JSON.stringify(filteredBooks, null, 4));
+      })
+      .catch((error) => {
+        // Handle the error if the Promise is rejected
+        res.status(404).json({ message: error.message });
+      });
   });
   
 
