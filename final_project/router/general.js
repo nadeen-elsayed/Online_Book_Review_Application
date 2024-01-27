@@ -59,16 +59,35 @@ public_users.get('/', function (req, res) {
   });
   
 
-// Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
-    //Write your code here
+// Get book details based on ISBN using Promise callbacks
+public_users.get('/isbn/:isbn', function (req, res) {
     let isbn = req.params.isbn;
-    let filtered_books = books[isbn]
-    res.send(`Book ISBN:${isbn} 
-    Book author: ${filtered_books['author']}
-    Book title: ${filtered_books['title']} `)
-    //return res.status(300).json({message: "Yet to be implemented"});
-   });
+  
+    // Create a Promise to fetch book details based on ISBN
+    const getBookDetailsPromise = new Promise((resolve, reject) => {
+      
+        if (books.hasOwnProperty(isbn)) {
+          resolve(books[isbn]);
+        } else {
+          reject(new Error('Book not found for the given ISBN.'));
+        }
+    });
+  
+    // Handle the Promise using callbacks
+    getBookDetailsPromise
+      .then((bookDetails) => {
+        // Send the book details as a JSON response
+        res.send({
+          ISBN: isbn,
+          title: bookDetails.title,
+          author: bookDetails.author
+        });
+      })
+      .catch((error) => {
+        // Handle the error if the Promise is rejected
+        res.status(404).json({ message: error.message });
+      });
+  });
     
   
 // Get book details based on author
