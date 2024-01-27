@@ -83,6 +83,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   
     if (!isbn) {
       res.status(400).send('ISBN is required.');
+
     }
     
     // Check if the user has a review for the given ISBN
@@ -93,7 +94,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     res.send('Review deleted successfully.');
     }
     else {
-      res.status(404).send('No book found for the given ISBN.');
+      res.status(400).send('No review found for the given user.');
     }
 });
 
